@@ -1,0 +1,18 @@
+# Base de données locale
+db.sqlite3
+
+# Fichiers Python compilés
+__pycache__/
+*.pyc
+*.pyo
+
+# Environnement virtuel
+venv/
+env/
+
+# Fichiers système Windows
+Thumbs.db
+desktop.ini
+
+# VS Code
+.vscode/

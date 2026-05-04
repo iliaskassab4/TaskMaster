@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster</title>
+    <!-- Bootstrap CSS : charge le design Bootstrap depuis internet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <!-- NAVBAR : barre de navigation en haut -->
+    <nav class="navbar navbar-dark bg-primary shadow">
+        <div class="container d-flex justify-content-between align-items-center">
+            
+            <!-- Logo / Nom du site -->
+            <a class="navbar-brand fw-bold" href="{% url 'liste_taches' %}">
+                ✅ TaskMaster
+            </a>
+
+            <!-- Afficher le nom de l'user et bouton déconnexion SEULEMENT si connecté -->
+            {% if user.is_authenticated %}
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Affiche le nom de l'utilisateur connecté -->
+                    <span class="text-white">👤 {{ user.username }}</span>
+                    <!-- Bouton déconnexion -->
+                    <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">
+                        Déconnexion
+                    </a>
+                </div>
+            {% endif %}
+
+        </div>
+    </nav>
+
+    <!-- CONTENU PRINCIPAL : chaque page met son contenu ici -->
+    <div class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Bootstrap JS : nécessaire pour les composants interactifs Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

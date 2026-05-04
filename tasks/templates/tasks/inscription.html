@@ -1,0 +1,64 @@
+{% extends 'tasks/base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card shadow-lg">
+            <div class="card-body p-5">
+
+                <h3 class="text-center mb-1">📝 Créer un compte</h3>
+                <p class="text-center text-muted mb-4">Rejoignez TaskMaster</p>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <!-- On boucle sur chaque champ du formulaire Django -->
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <!-- Label du champ ex: "Username", "Password" -->
+                            <label class="form-label fw-bold">{{ field.label }}</label>
+
+                            <!-- Le champ HTML lui-même -->
+                            <!-- on ajoute class Bootstrap manuellement -->
+                            <input 
+                                type="{{ field.field.widget.input_type }}"
+                                name="{{ field.html_name }}"
+                                class="form-control {% if field.errors %}is-invalid{% endif %}"
+                                id="{{ field.id_for_label }}"
+                                {% if field.value %}value="{{ field.value }}"{% endif %}
+                            >
+
+                            <!-- Erreurs du champ (ex: "Username déjà pris") -->
+                            {% if field.errors %}
+                                {% for error in field.errors %}
+                                    <div class="invalid-feedback">{{ error }}</div>
+                                {% endfor %}
+                            {% endif %}
+
+                            <!-- Texte d'aide sous le champ -->
+                            {% if field.help_text %}
+                                <small class="text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-success btn-lg w-100 mt-2">
+                        Créer mon compte
+                    </button>
+
+                </form>
+
+                <!-- Lien vers le login -->
+                <hr>
+                <p class="text-center mb-0">
+                    Déjà un compte ? 
+                    <a href="{% url 'login' %}">Se connecter</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

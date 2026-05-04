@@ -1,0 +1,120 @@
+{% extends 'tasks/base.html' %}
+
+{% block content %}
+
+<!-- En-tête : titre + bouton Nouvelle Tâche -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold">📋 Mes Tâches</h2>
+    <a href="{% url 'creer_tache' %}" class="btn btn-primary">
+        + Nouvelle Tâche
+    </a>
+</div>
+
+<!-- FORMULAIRE DE RECHERCHE ET FILTRE -->
+<form method="GET" class="row g-2 mb-4">
+
+    <!-- Recherche par titre -->
+    <div class="col-md-4">
+        <input 
+            type="text" 
+            name="q" 
+            class="form-control" 
+            placeholder="🔍 Rechercher une tâche..." 
+            value="{{ recherche }}"
+        >
+    </div>
+
+    <!-- Filtre par statut -->
+    <div class="col-md-3">
+        <select name="statut" class="form-select">
+            <option value="">Tous les statuts</option>
+            <option value="todo"     {% if request.GET.statut == 'todo' %}selected{% endif %}>À faire</option>
+            <option value="en_cours" {% if request.GET.statut == 'en_cours' %}selected{% endif %}>En cours</option>
+            <option value="termine"  {% if request.GET.statut == 'termine' %}selected{% endif %}>Terminé</option>
+        </select>
+    </div>
+
+    <!-- NOUVEAU : Filtre par date limite -->
+    <div class="col-md-3">
+        <input 
+            type="date" 
+            name="date_limite" 
+            class="form-control"
+            value="{{ request.GET.date_limite }}"
+            title="Filtrer par date limite"
+        >
+    </div>
+
+    <!-- Bouton Filtrer -->
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-secondary w-100">Filtrer</button>
+    </div>
+
+</form>
+
+<!-- LISTE DES TÂCHES -->
+{% for tache in taches %}
+
+    <!-- La carte devient rouge si la tâche est EN RETARD -->
+    <div class="card mb-3 shadow-sm 
+        {% if tache.date_limite and tache.date_limite < aujourd_hui %}
+            border-danger border-2
+        {% endif %}
+    ">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            
+            <!-- Partie gauche : infos de la tâche -->
+            <div>
+                <h5 class="mb-1">{{ tache.titre }}</h5>
+
+                <!-- BADGE STATUT avec couleur différente selon la valeur -->
+                {% if tache.statut == 'todo' %}
+                    <span class="badge bg-secondary">À faire</span>
+                {% elif tache.statut == 'en_cours' %}
+                    <span class="badge bg-warning text-dark">En cours</span>
+                {% elif tache.statut == 'termine' %}
+                    <span class="badge bg-success">✔ Terminé</span>
+                {% endif %}
+
+                <!-- DATE LIMITE : badge rouge si en retard, gris sinon -->
+                {% if tache.date_limite %}
+                    {% if tache.date_limite < aujourd_hui %}
+                        <span class="badge bg-danger ms-2">⚠️ En retard — {{ tache.date_limite }}</span>
+                    {% else %}
+                        <span class="badge bg-light text-dark border ms-2">📅 {{ tache.date_limite }}</span>
+                    {% endif %}
+                {% endif %}
+
+                <!-- Description courte si elle existe -->
+                {% if tache.description %}
+                    <p class="text-muted small mt-1 mb-0">{{ tache.description|truncatechars:80 }}</p>
+                {% endif %}
+
+            </div>
+
+            <!-- Partie droite : boutons action -->
+            <div class="d-flex gap-2">
+                <!-- Bouton Modifier : envoie vers /modifier/5/ (pk = id de la tâche) -->
+                <a href="{% url 'modifier_tache' tache.pk %}" 
+                   class="btn btn-sm btn-outline-primary">
+                    ✏️ Modifier
+                </a>
+                <!-- Bouton Supprimer : demande confirmation avant de supprimer -->
+                <a href="{% url 'supprimer_tache' tache.pk %}" 
+                   class="btn btn-sm btn-outline-danger"
+                   onclick="return confirm('Supprimer cette tâche ?')">
+                    🗑️ Supprimer
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+{% empty %}
+    <!-- S'affiche si la liste est vide -->
+    <div class="alert alert-info text-center">
+        😊 Aucune tâche trouvée. Créez votre première tâche !
+    </div>
+{% endfor %}
+
+{% endblock %}
