@@ -74,10 +74,15 @@ WSGI_APPLICATION = "taskmaster.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# NOUVEAU CODE - MySQL + phpMyAdmin
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  # on utilise MySQL
+        'NAME': 'taskmaster',       # nom de la BDD créée dans phpMyAdmin
+        'USER': 'root',             # utilisateur par défaut de XAMPP
+        'PASSWORD': '',             # mot de passe vide par défaut dans XAMPP
+        'HOST': 'localhost',        # le serveur MySQL tourne en local
+        'PORT': '3307',             # port par défaut de MySQL
     }
 }
 

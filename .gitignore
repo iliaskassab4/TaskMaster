@@ -16,3 +16,5 @@ desktop.ini
 
 # VS Code
 .vscode/
+# Variables d'environnement (contient mots de passe)
+.env
